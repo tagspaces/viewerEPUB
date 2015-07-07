@@ -12,11 +12,10 @@ define(function(require, exports, module) {
     exports.type = "viewer";
     exports.supportedFileTypes = [ "epub" ];
     
-    var TSCORE = require("tscore");
     var JSZip = require("jszip");
-    var ePub = require("ext/viewerEPUB/epub.min");
+    var TSCORE = require("tscore");
+    var reader = require("ext/viewerEPUB/epubreader");
 
-    var Book = null;
     var extensionDirectory = TSCORE.Config.getExtensionPath()+"/"+exports.id;
     
     function getZipStorage(zipUrl) {
@@ -34,76 +33,50 @@ define(function(require, exports, module) {
         return promise;
     }
 
-    function getMimeType(file) {
-        var mimeTypes = {
-            "xhtml" : "application/xhtml+xml",
-            "jpg" : "image/jpeg"
-        }
-        var ext = file.split(".").pop();
-        var res = mimeTypes[ext];
-        console.log("mimeType " + res);
-        return res;
-    }
-
-    EPUBJS.Unarchiver.prototype.loadLib = function () {
-        console.log("PUBJS.Unarchiver.prototype.loadLib - handle error ");
-    }
-
-    EPUBJS.Unarchiver.prototype.openZip = function(zipUrl, callback) {
-
-        var unarchiver = this;
-        return getZipStorage(zipUrl).then(function(data) {
-            unarchiver.zip = data;
-            unarchiver.zip.getMimeType = getMimeType;
-        });
-    };
-
-    exports.init = function(filePath, elementID) {
-        console.log("Initalization EPUB Viewer...");
-
+    function initViewerUI(elementID, renderID) {
         var styleArrow =  {
             "position": "absolute",
             "top": "50%",
             "margin-top": "-32px",
             "font-size": "64px",
-            "color": "#E2E2E2",
+            "color": "#D8D8D8",
             "font-family": "arial, sans-serif",
             "font-weight": "bold",
             "cursor": "pointer",
             "-webkit-user-select": "none",
             "-moz-user-select": "none",
             "user-select": "none"
-        }
+        };
 
         var styleMain = {
             "position": "absolute",
             "width": "100%",
             "height": "100%"
-        }
+        };
 
         var styleArea = {
             "width": "80%",
             "height": "80%",
             "margin": "5% auto",
-            "max-width": "1250px"
-        }
+        };
 
-        var $prev = $("<div>‹</div>").attr('id','prev').css({"left": "40px"}).css(styleArrow).click(prevPage);
-        var $next = $("<div>›</div>").attr('id','next').css({"right": "40px"}).css(styleArrow).click(nextPage);
-        var $area = $("<div/>").attr('id','area').css(styleArea); 
+        var $prev = $("<div>‹</div>").attr('id','prev').css({"left": "40px"}).css(styleArrow).click(reader.prevPage);
+        var $next = $("<div>›</div>").attr('id','next').css({"right": "40px"}).css(styleArrow).click(reader.nextPage);
+        
+        var $area = $("<div/>").attr('id', renderID).css(styleArea); 
         var $main = $("<div/>").attr('id','main').css(styleMain)
             .append($prev).append($area).append($next);
+
         $('#'+elementID).append($main); 
 
+    }
 
-        Book = ePub({ restore: true });
-        Book.renderTo("area");
-        Book.open(filePath); 
-        
-        /*loadEpubFile(filePath, function(exportedBookPath, zipFile) {
-           
-            Book.open(exportedBookPath); 
-        });*/
+    exports.init = function(filePath, elementID) {
+        console.log("Initalization EPUB Viewer...");
+        var renderID = getRandomID("epub");
+        initViewerUI(elementID, renderID);
+        reader.setZipStoragePromise(getZipStorage);
+        reader.loadBook(filePath, renderID);   
     };
     
     exports.viewerMode = function() {
@@ -124,14 +97,6 @@ define(function(require, exports, module) {
     function dirName(path) {
         var res = path.substring(0, path.lastIndexOf("/"));
         return res.length > 0 ? res : undefined;
-    }
-
-    function prevPage() {
-        Book.prevPage();
-    }
-
-    function nextPage() {
-        Book.nextPage();
     }
 
     function loadEpubFile(filePath, resultCallback) {
@@ -174,5 +139,16 @@ define(function(require, exports, module) {
         }, function(error) {
             TSCORE.showAlertDialog(error);
         });
+    }
+
+    function getRandomID(prefix, length) {
+        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+        var string_length = length || 8;
+        var randomstring = '';
+        for (var i=0; i < string_length; i++) {
+            var rnum = Math.floor(Math.random() * chars.length);
+            randomstring += chars.substring(rnum, rnum + 1);
+        }
+        return prefix ? prefix + "-" + randomstring : randomstring;
     }
 });
