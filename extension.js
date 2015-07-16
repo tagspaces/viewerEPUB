@@ -75,8 +75,14 @@ define(function(require, exports, module) {
         console.log("Initalization EPUB Viewer...");
         var renderID = getRandomID("epub");
         initViewerUI(elementID, renderID);
-        reader.setZipStoragePromise(getZipStorage);
-        reader.loadBook(filePath, renderID);   
+        if(isCordova !== true) {
+            reader.setZipStoragePromise(getZipStorage);
+            reader.loadBook(filePath, renderID);   
+        } else {
+            loadEpubFile(filePath, function(extractedPath) {
+                reader.loadBook(extractedPath, renderID);
+            });
+        }
     };
     
     exports.viewerMode = function() {
@@ -101,7 +107,8 @@ define(function(require, exports, module) {
 
     function loadEpubFile(filePath, resultCallback) {
 
-        var pathToImport = TSCORE.currentPath + "/" + baseName(filePath) +".IMP/";
+        var extrfolder = isCordovaiOS ? cordova.file.dataDirectory : cordova.file.externalDataDirectory;
+        var pathToImport = extrfolder + "/" + baseName(filePath) +".IMP/";
         
         TSCORE.IO.getFileContent(filePath, function(jsArrayBuffer) {
             var zipFile = new JSZip(jsArrayBuffer);
@@ -133,6 +140,7 @@ define(function(require, exports, module) {
            }
 
         setTimeout( function() {
+            pathToImport = pathToImport.replace("file://", "");
             resultCallback(pathToImport, zipFile); 
         }, 1000);
    
