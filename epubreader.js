@@ -31,7 +31,10 @@ define(function(require, exports, module) {
         var mimeTypes = {
             "xhtml" : "application/xhtml+xml",
             "jpg" : "image/jpeg",
-            "png": "image/png"
+            "png": "image/png",
+            "htm":	"text/html",
+			"html":	"text/html",
+			"htmls": "text/html"
         }
         var ext = file.split(".").pop();
         return mimeTypes[ext];
