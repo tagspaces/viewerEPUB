@@ -32,9 +32,9 @@ define(function(require, exports, module) {
             "xhtml" : "application/xhtml+xml",
             "jpg" : "image/jpeg",
             "png": "image/png",
-            "htm":	"text/html",
-			"html":	"text/html",
-			"htmls": "text/html"
+            "htm":  "text/html",
+            "html": "text/html",
+            "htmls": "text/html"
         }
         var ext = file.split(".").pop();
         return mimeTypes[ext];
@@ -57,7 +57,7 @@ define(function(require, exports, module) {
         
         bookFileName = filePath;
 
-    	book = ePub(filePath, options);
+        book = ePub(filePath, options);
         setStyle(defaultBookStyle);
         rendered = book.renderTo(renderID);
 
