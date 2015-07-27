@@ -5,7 +5,7 @@
 define(function(require, exports, module) { 
 "use strict";
 
-    var ePub = require("ext/viewerEPUB/epub.min");
+    var ePub = require("ext/viewerEPUB/epubjs/epub.min");
     var book, rendered;
     var data;
     var bookFileName;
