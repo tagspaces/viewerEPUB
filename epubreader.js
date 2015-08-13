@@ -78,7 +78,7 @@ define(function(require, exports, module) {
   }
 
   function storeLastPage(storeData) {
-    if (storeData !== null) {
+    if (storeData) {
       localStorage.setItem(bookFileName, storeData);
     } else {
       return localStorage.getItem(bookFileName);
