@@ -14,9 +14,12 @@ define(function(require, exports, module) {
 
   var JSZip = require("jszip");
   var TSCORE = require("tscore");
-  var reader = require("ext/viewerEPUB/epubreader");
-
   var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + exports.id;
+
+  var reader = require("ext/viewerEPUB/epubreader");
+  require([
+    'css!' + extensionDirectory + '/extension.css',
+  ], function() {});
 
   function getZipStorage(zipUrl) {
     var promise = new Promise(function(resolve, reject) {
@@ -33,45 +36,33 @@ define(function(require, exports, module) {
   }
 
   function initViewerUI(elementID, renderID) {
-    var styleArrow =  {
-      "position": "absolute",
-      "top": "50%",
-      "margin-top": "-32px",
-      "font-size": "64px",
-      "color": "#D8D8D8",
-      "font-family": "arial, sans-serif",
-      "font-weight": "bold",
-      "cursor": "pointer",
-      "-webkit-user-select": "none",
-      "-moz-user-select": "none",
-      "user-select": "none"
-    };
+    var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(reader.prevPage);
 
-    var styleMain = {
-      "position": "absolute",
-      "width": "100%",
-      "height": "100%"
-    };
+    var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(reader.nextPage);
 
-    var styleArea = {
-      "width": "80%",
-      "height": "80%",
-      "margin": "5% auto",
-    };
+    var $area = $("<div>")
+      .attr('id', renderID)
+      .addClass("flexMaxWidth")
+      .addClass("flexLayoutVertical")
+      .css({ "margin": "5% auto" });
 
-    var $prev = $("<div>‹</div>").attr('id', 'prev').css({"left": "40px"}).css(styleArrow).click(reader.prevPage);
-    var $next = $("<div>›</div>").attr('id', 'next').css({"right": "40px"}).css(styleArrow).click(reader.nextPage);
-
-    var $area = $("<div/>").attr('id', renderID).css(styleArea);
-    var $main = $("<div/>").attr('id', 'main').css(styleMain).append($prev).append($area).append($next);
+    var $main = $("<div>")
+      .attr('id', 'viewerEPUBMain')
+      .addClass("flexLayout")
+      .css({ "width": "100%" })
+      .append($prev)
+      .append($area)
+      .append($next);
 
     $('#' + elementID).append($main);
   }
 
   exports.init = function(filePath, elementID) {
     console.log("Initalization EPUB Viewer...");
+
     var renderID = getRandomID("epub");
     initViewerUI(elementID, renderID);
+
     if (isCordova !== true) {
       reader.setZipStoragePromise(getZipStorage);
       reader.loadBook(filePath, renderID);
@@ -80,6 +71,7 @@ define(function(require, exports, module) {
         reader.loadBook(extractedPath, renderID);
       });
     }
+
   };
 
   exports.viewerMode = function() {
