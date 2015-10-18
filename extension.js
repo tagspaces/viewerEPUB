@@ -44,12 +44,12 @@ define(function(require, exports, module) {
       .attr('id', renderID)
       .addClass("flexMaxWidth")
       .addClass("flexLayoutVertical")
-      .css({ "margin": "5% auto" });
+      .css({"margin": "5% auto"});
 
     var $main = $("<div>")
       .attr('id', 'viewerEPUBMain')
       .addClass("flexLayout")
-      .css({ "width": "100%" })
+      .css({"width": "100%"})
       .append($prev)
       .append($area)
       .append($next);
