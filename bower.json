@@ -1,0 +1,28 @@
+{
+  "name": "viewerEPUB",
+  "id": "viewerEPUB",
+  "description": "A TagSpaces extension allowing you to open ebooks in EPUB format.",
+  "type": "viewer",
+  "version": "1.0.0",
+  "dependencies": {
+    "epub.js": "0.2.12"
+  },
+  "devDependencies": {},
+  "authors": [
+    "TagSpaces Authors - http://tagspaces.org",
+    "Ilian Sapundshiev - http://ilian.me"
+  ],
+  "keywords": [
+    "epub",
+    "ebook",
+    "reader"
+  ],
+  "license": "",
+  "main": [
+    "extension.js"
+  ],
+  "ignore": [
+    "Gruntfile.js"
+  ],
+  "private": true
+}
