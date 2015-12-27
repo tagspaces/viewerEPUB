@@ -5,7 +5,7 @@
   "type": "viewer",
   "version": "1.0.0",
   "dependencies": {
-    "epub.js": "0.2.12"
+    "epub.js": "0.2.13"
   },
   "devDependencies": {},
   "authors": [

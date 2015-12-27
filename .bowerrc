@@ -1,4 +1,13 @@
 {
   "directory": "libs",
-  "color": true
+  "color": true,
+  "ignoredDependencies": [
+    "rsvp",
+    "underscore",
+    "webcomponentsjs",
+    "polymer",
+    "backbone",
+    "jquery-highlight",
+    "jquery"
+  ]
 }
