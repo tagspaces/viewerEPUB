@@ -5,7 +5,7 @@
 define(function(require, exports, module) { 
   "use strict";
 
-  var ePub = require("ext/viewerEPUB/epubjs/epub.min");
+  var ePub = require("ext/viewerEPUB/epubjs/epub");
   var book, rendered;
   var data;
   var bookFileName;
@@ -25,7 +25,7 @@ define(function(require, exports, module) {
     width : false,
     height: false,
   };
-
+/*
   function getMimeType(file) {
     var mimeTypes = {
       "xhtml" : "application/xhtml+xml",
@@ -50,7 +50,7 @@ define(function(require, exports, module) {
       unarchiver.zip.getMimeType = getMimeType;
     });
   };
-
+*/
   function loadBook(filePath, renderID) {
     bookFileName = filePath;
     book = ePub(filePath, options);
@@ -86,7 +86,7 @@ define(function(require, exports, module) {
   }
 
   function setZipStoragePromise (fnZipPromise) {
-    EPUBJS.Unarchiver.prototype.getZipStorage = fnZipPromise;
+    //EPUBJS.Unarchiver.prototype.getZipStorage = fnZipPromise;
   }
 
   function setZipData(zipData) {
