@@ -1,5 +1,5 @@
 {
-  "name": "viewerEPUB",
+  "name": "EPUB Reader",
   "id": "viewerEPUB",
   "description": "A TagSpaces extension allowing you to open ebooks in EPUB format.",
   "type": "viewer",
