@@ -21,20 +21,6 @@ define(function(require, exports, module) {
     'css!' + extensionDirectory + '/extension.css',
   ], function() {});
 
-  function getZipStorage(zipUrl) {
-    var promise = new Promise(function(resolve, reject) {
-      TSCORE.IO.getFileContent(zipUrl, function(jsArrayBuffer) {
-        var zipFile = new JSZip(jsArrayBuffer);
-        resolve(zipFile);
-      }, function(error) {
-        console.log("getZipStorage error: " + error);
-        reject(error);
-      });
-    });
-
-    return promise;
-  }
-
   function initViewerUI(elementID, renderID) {
     var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(reader.prevPage);
 
@@ -63,15 +49,7 @@ define(function(require, exports, module) {
     var renderID = getRandomID("epub");
     initViewerUI(elementID, renderID);
 
-    if (isCordova !== true) {
-      reader.setZipStoragePromise(getZipStorage);
-      reader.loadBook(filePath, renderID);
-    } else {
-      loadEpubFile(filePath, function(extractedPath) {
-        reader.loadBook(extractedPath, renderID);
-      });
-    }
-
+    reader.loadBook(filePath, renderID);
   };
 
   exports.viewerMode = function() {
@@ -93,49 +71,7 @@ define(function(require, exports, module) {
     var res = path.substring(0, path.lastIndexOf("/"));
     return res.length > 0 ? res : undefined;
   }
-
-  function loadEpubFile(filePath, resultCallback) {
-    var extrfolder = isCordovaiOS ? cordova.file.dataDirectory : cordova.file.externalDataDirectory;
-    var pathToImport = extrfolder + "/" + baseName(filePath) + ".IMP/";
-
-    TSCORE.IO.getFileContent(filePath, function(jsArrayBuffer) {
-      var zipFile = new JSZip(jsArrayBuffer);
-      var lastDir, currentDir;
-      TSCORE.IO.createDirectory(pathToImport, true);
-
-      for (var fileName in zipFile.files) {
-        currentDir = dirName(fileName);
-        if (lastDir !== currentDir) {
-          TSCORE.IO.createDirectory(pathToImport + currentDir, true);
-        }
-
-        if (JSZip.support.arraybuffer) {
-          var buffer = zipFile.file(fileName).asArrayBuffer();
-          var extractedFilePath = pathToImport;
-          if (currentDir) {
-            extractedFilePath += currentDir + "/";
-          }
-          extractedFilePath += baseName(fileName);
-
-          TSCORE.IO.saveBinaryFile(extractedFilePath, buffer, true, true);
-        } else {
-          TSCORE.showAlertDialog("JSZip dont support arraybuffer exit !");
-          return;
-        }
-
-        lastDir = currentDir;
-      }
-
-      setTimeout(function() {
-        pathToImport = pathToImport.replace("file://", "");
-        resultCallback(pathToImport, zipFile);
-      }, 1000);
-
-    }, function(error) {
-      TSCORE.showAlertDialog(error);
-    });
-  }
-
+  
   function getRandomID(prefix, length) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
     var string_length = length || 8;
