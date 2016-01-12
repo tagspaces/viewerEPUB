@@ -1,6 +1,9 @@
-/* Copyright (c) 2015 The Tagspaces Authors. All rights reserved.
- * Use of this source code is governed by a AGPL3 license that 
- * can be found in the LICENSE file. */
+/*
+ * @overview EPUB reader module
+ * @copyright Copyright (c) 2015 Borislav Sapundzhiev <BSapundzhiev@gmail.com>
+ * @license   Licensed under MIT license
+ *            See https://opensource.org/licenses/MIT 
+ */
 
 define(function(require, exports, module) { 
   "use strict";

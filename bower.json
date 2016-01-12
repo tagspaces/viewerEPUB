@@ -11,13 +11,14 @@
   "authors": [
     "TagSpaces Authors - http://tagspaces.org",
     "Ilian Sapundshiev - http://ilian.me"
+    "Borislav Sapundzhiev - bsapundjiev@gmail.com"
   ],
   "keywords": [
     "epub",
     "ebook",
     "reader"
   ],
-  "license": "",
+  "license": "MIT",
   "main": [
     "extension.js"
   ],
