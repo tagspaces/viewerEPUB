@@ -1,21 +1,23 @@
     {
-      "name": "viewerBrowser",
-      "id": "viewerBrowser",
-      "description": "A TagSpaces extension allowing to open files in the embedded browser.",
+      "name": "EPUB Reader",
+      "id": "viewerEPUB",
+      "description": "A TagSpaces extension allowing you to open ebooks in EPUB format.",
       "type": "viewer",
       "version": "1.0.0",
       "dependencies": {
+        "epub.js": "0.2.13"
       },
       "devDependencies": {},
       "authors": [
         "TagSpaces Authors - http://tagspaces.org",
-        "Ilian Sapundshiev - http://ilian.me"
+        "Borislav Sapundzhiev - bsapundjiev@gmail.com"
       ],
       "keywords": [
-        "viewer",
-        "iframe"
+        "epub",
+        "ebook",
+        "reader"
       ],
-      "license": "",
+      "license": "MIT",
       "main": [
         "extension.js"
       ],
@@ -24,3 +26,4 @@
       ],
       "private": true
     }
+    
