@@ -14,8 +14,7 @@ define(function(require, exports, module) {
   exports.title = "EPUB Viewer";
   exports.type = "viewer";
   exports.supportedFileTypes = ["epub"];
-
-  var JSZip = require("jszip");
+  
   var TSCORE = require("tscore");
   var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + exports.id;
 
@@ -67,14 +66,6 @@ define(function(require, exports, module) {
     console.log("getContent not supported on this extension");
   };
 
-  function baseName(path) {
-    return path.split("/").pop();
-  }
-  function dirName(path) {
-    var res = path.substring(0, path.lastIndexOf("/"));
-    return res.length > 0 ? res : undefined;
-  }
-  
   function getRandomID(prefix, length) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
     var string_length = length || 8;
