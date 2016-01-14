@@ -50,7 +50,7 @@ define(function(require, exports, module) {
 
     var renderID = getRandomID("epub");
     initViewerUI(elementID, renderID);
-    if(!isCordova) {
+    if (!isCordova) {
       filePath = "file://" + filePath;
     }
     reader.loadBook(filePath, renderID);
