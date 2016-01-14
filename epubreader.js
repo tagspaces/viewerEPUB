@@ -10,7 +10,6 @@ define(function(require, exports, module) {
 
   var ePub = require("ext/viewerEPUB/epubjs/epub");
   var book, rendered;
-  var data;
   var bookFileName;
   var defaultBookStyle = {
     "font-size": "1.2em",
@@ -63,10 +62,6 @@ define(function(require, exports, module) {
     }
   }
 
-  function setZipData(zipData) {
-    data = zipData;
-  }
-
   function prevPage() {
     book.prevPage();
   }
@@ -85,7 +80,5 @@ define(function(require, exports, module) {
   exports.loadBook = loadBook;
   exports.prevPage = prevPage;
   exports.nextPage = nextPage;
-  exports.setZipStoragePromise = setZipStoragePromise;
-  exports.setZipData = setZipData;
   exports.setStyle = setStyle;
 });
