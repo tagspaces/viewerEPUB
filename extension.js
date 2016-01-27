@@ -8,14 +8,13 @@
 define(function(require, exports, module) {
   "use strict";
 
-  console.log("Loading viewerEPUB");
-
   var extensionID = "viewerEPUB"; // ID should be equal to the directory name where the ext. is located
   var extensionSupportedFileTypes = ["epub"];
-  
+
+  console.log("Loading " + extensionID);
+
   var TSCORE = require("tscore");
   var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + extensionID;
-
   var reader = require("ext/viewerEPUB/epubreader");
   require([
     'css!' + extensionDirectory + '/extension.css',
@@ -52,22 +51,22 @@ define(function(require, exports, module) {
       filePath = "file://" + filePath;
     }
     reader.loadBook(filePath, renderID);
-  };
+  }
 
   function viewerMode() {
 
     console.log("viewerMode not supported on this extension");
-  };
+  }
 
   function setContent() {
 
     console.log("setContent not supported on this extension");
-  };
+  }
 
   function getContent() {
 
     console.log("getContent not supported on this extension");
-  };
+  }
 
   function getRandomID(prefix, length) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
