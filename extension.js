@@ -10,13 +10,11 @@ define(function(require, exports, module) {
 
   console.log("Loading viewerEPUB");
 
-  exports.id = "viewerEPUB"; // ID should be equal to the directory name where the ext. is located
-  exports.title = "EPUB Viewer";
-  exports.type = "viewer";
-  exports.supportedFileTypes = ["epub"];
+  var extensionID = "viewerEPUB"; // ID should be equal to the directory name where the ext. is located
+  var extensionSupportedFileTypes = ["epub"];
   
   var TSCORE = require("tscore");
-  var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + exports.id;
+  var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + extensionID;
 
   var reader = require("ext/viewerEPUB/epubreader");
   require([
@@ -45,7 +43,7 @@ define(function(require, exports, module) {
     $('#' + elementID).append($main);
   }
 
-  exports.init = function(filePath, elementID) {
+  function init(filePath, elementID) {
     console.log("Initalization EPUB Viewer...");
 
     var renderID = getRandomID("epub");
@@ -56,15 +54,18 @@ define(function(require, exports, module) {
     reader.loadBook(filePath, renderID);
   };
 
-  exports.viewerMode = function() {
+  function viewerMode() {
+
     console.log("viewerMode not supported on this extension");
   };
 
-  exports.setContent = function() {
+  function setContent() {
+
     console.log("setContent not supported on this extension");
   };
 
-  exports.getContent = function() {
+  function getContent() {
+
     console.log("getContent not supported on this extension");
   };
 
@@ -78,4 +79,9 @@ define(function(require, exports, module) {
     }
     return prefix ? prefix + "-" + randomstring : randomstring;
   }
+
+  exports.init = init;
+  exports.getContent = getContent;
+  exports.setContent = setContent;
+  exports.viewerMode = viewerMode;
 });
