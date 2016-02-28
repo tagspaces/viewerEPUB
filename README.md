@@ -23,7 +23,7 @@ If you want to extend this extensions, please follow our general [extension deve
 
 ## Screenshots
 
-![Screenshot of the viewerEPUB](http://tagspaces.org/extensions/editorHTML/viewerEPUB-screenshot.png)
+![Screenshot of the viewerEPUB](http://tagspaces.org/extensions/viewerEPUB/viewerEPUB-screenshot.png)
 
 ## License
 
