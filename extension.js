@@ -16,7 +16,6 @@ define(function (require, exports, module) {
     var containerElID, $containerElement, currentFilePath;
     var TSCORE = require("tscore");
     var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + extensionID;
-    var reader = require("ext/viewerEPUB/epubreader");
     require([
         'css!' + extensionDirectory + '/extension.css',
     ], function () {
@@ -53,44 +52,29 @@ define(function (require, exports, module) {
     }
 
     function setContent(content) {
-        var renderID = getRandomID('epub');
+
+       //var  parser = new DOMParser();
+       //var  xmlDoc = parser.parseFromString(content,"text/xml");
+       // console.log(xmlDoc);
 
         var fileDirectory = TSCORE.TagUtils.extractContainingDirectoryPath(currentFilePath);
         if (isWeb) {
             fileDirectory = TSCORE.TagUtils.extractContainingDirectoryPath(location.href) + "/" + fileDirectory;
         }
-       // var book = reader.loadBook(fileDirectory, renderID);
-        if (reader.loadBook(fileDirectory, renderID)) {
-            var contentWindow = document.getElementById("iframeViewer").contentWindow;
-            if (typeof contentWindow.setContent === "function") {
-                contentWindow.setContent(content, fileDirectory);
-            } else {
-                // TODO optimize setTimeout
-                window.setTimeout(function() {
-                    contentWindow.setContent(content, fileDirectory);
-                }, 500);
-            }
+        var contentWindow = document.getElementById("iframeViewer").contentWindow;
+        if (typeof contentWindow.setContent === "function") {
+            contentWindow.setContent(content,fileDirectory);
         } else {
-            TSCORE.showAlertDialog("No URL found in this file.");
+            // TODO optimize setTimeout
+            window.setTimeout(function () {
+                contentWindow.setContent(content,fileDirectory);
+            }, 500);
         }
-
-        // console.log("setContent not supported on this extension");
     }
 
     function getContent() {
 
         console.log("getContent not supported on this extension");
-    }
-
-    function getRandomID(prefix, length) {
-        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-        var string_length = length || 8;
-        var randomstring = '';
-        for (var i = 0; i < string_length; i++) {
-            var rnum = Math.floor(Math.random() * chars.length);
-            randomstring += chars.substring(rnum, rnum + 1);
-        }
-        return prefix ? prefix + "-" + randomstring : randomstring;
     }
 
     exports.init = init;

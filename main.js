@@ -147,30 +147,31 @@ $(document).ready(function() {
   }
 
 });
-function setContent(content) {
+function setContent(content, fileDirectory) {
   var $htmlContent = $('#htmlContent');
   $htmlContent.append(content);
 
-  //if (fileDirectory.indexOf("file://") === 0) {
-  //  fileDirectory = fileDirectory.substring(("file://").length, fileDirectory.length);
-  //}
+  var Book = ePub(fileDirectory, content);
+  Book.renderTo("area");
+
+  if (fileDirectory.indexOf("file://") === 0) {
+    fileDirectory = fileDirectory.substring(("file://").length, fileDirectory.length);
+  }
   var options = {
-    bookPath : filePath,
+    bookPath : fileDirectory,
     restore: true
   };
-  var book = new ePub(options, filePath);
-  //console.log("BOOK: "+ book);
+ // var book = ePub(content, fileDirectory);
+ // book.renderTo("area");
+ //// book.renderTo('area');
+ // console.log("ePUB : " + book);
 
-  //var $el = document.getElementById("iframeViewer");
-  //book.renderTo($el);
-  //console.log("REDNDER BOOK" + Book.renderTo());
+  var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(Book.prevPage);
 
-  var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(book.prevPage);
-
-  var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(book.nextPage);
+  var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(Book.nextPage);
 
   var $area = $("<div>")
-      .attr('id')
+      .attr('id', 'area')
       .addClass("flexMaxWidth")
       .addClass("flexLayoutVertical")
       .css({"margin": "5% auto"});
