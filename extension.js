@@ -2,7 +2,7 @@
  * @overview EPUB viewer for tagspaces
  * @copyright Copyright (c) 2015 Borislav Sapundzhiev <BSapundzhiev@gmail.com>
  * @license   Licensed under MIT license
- *            See https://opensource.org/licenses/MIT  
+ *            See https://opensource.org/licenses/MIT
  */
 
 define(function(require, exports, module) {
@@ -19,6 +19,28 @@ define(function(require, exports, module) {
   require([
     'css!' + extensionDirectory + '/extension.css',
   ], function() {});
+
+  function initViewerUI(elementID, renderID) {
+    var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(reader.prevPage);
+
+    var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(reader.nextPage);
+
+    var $area = $("<div>")
+      .attr('id', renderID)
+      .addClass("flexMaxWidth")
+      .addClass("flexLayoutVertical")
+      .css({"margin": "5% auto"});
+
+    var $main = $("<div>")
+      .attr('id', 'viewerEPUBMain')
+      .addClass("flexLayout")
+      .css({"width": "100%"})
+      .append($prev)
+      .append($area)
+      .append($next);
+
+    $('#' + elementID).append($main);
+  }
 
   function init(filePath, elementID) {
     console.log("Initalization EPUB Viewer...");
