@@ -147,41 +147,78 @@ $(document).ready(function() {
   }
 
 });
-function setContent(content, fileDirectory) {
+
+//function initViewerUI(containerElementID, renderID) {
+//  var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(reader.prevPage);
+//
+//  var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(reader.nextPage);
+//
+//  var $area = $("<div>")
+//      .attr('id', renderID)
+//      .addClass("flexMaxWidth")
+//      .addClass("flexLayoutVertical")
+//      .css({"margin": "5% auto"});
+//
+//  var $main = $("<div>")
+//      .attr('id', 'viewerEPUBMain')
+//      .addClass("flexLayout")
+//      .css({"width": "100%"})
+//      .append($prev)
+//      .append($area)
+//      .append($next);
+//
+//  $('#' + containerElementID).append($main);
+//}
+
+//function getRandomID(prefix, length) {
+//  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+//  var string_length = length || 8;
+//  var randomstring = '';
+//  for (var i = 0; i < string_length; i++) {
+//    var rnum = Math.floor(Math.random() * chars.length);
+//    randomstring += chars.substring(rnum, rnum + 1);
+//  }
+//  return prefix ? prefix + "-" + randomstring : randomstring;
+//}
+function init(filePath, elementID) {
+  //console.log("Initalization EPUB Viewer...");
+
+  //var renderID = getRandomID("epub");
+  //initViewerUI(elementID, renderID);
+  //if (!isCordova) {
+  //  filePath = "file://" + filePath;
+  //}
+  //reader.loadBook(filePath, renderID);
+}
+
+var book;
+function setContent(content, fileDirectory , containerElementID) {
+  console.log("MAIN CONTENT:");
+  console.debug(content);
+  console.log("MAIN END");
+
+  //try {
+  //  content = JSON.parse(content);
+  //} catch (e){
+  //  console.log("Error parsing JSON document. " + e);
+  //  return false;
+  //}
+  //console.debug(content);
+
   var $htmlContent = $('#htmlContent');
   $htmlContent.append(content);
-
-  var Book = ePub(fileDirectory, content);
-  Book.renderTo("area");
 
   if (fileDirectory.indexOf("file://") === 0) {
     fileDirectory = fileDirectory.substring(("file://").length, fileDirectory.length);
   }
-  var options = {
-    bookPath : fileDirectory,
-    restore: true
-  };
- // var book = ePub(content, fileDirectory);
- // book.renderTo("area");
- //// book.renderTo('area');
- // console.log("ePUB : " + book);
-
-  var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(Book.prevPage);
-
-  var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(Book.nextPage);
-
-  var $area = $("<div>")
-      .attr('id', 'area')
-      .addClass("flexMaxWidth")
-      .addClass("flexLayoutVertical")
-      .css({"margin": "5% auto"});
 
 
-   $htmlContent.append($("<div>")
-      .attr('id', 'viewerEPUBMain')
-      .addClass("flexLayout")
-      .css({"width": "100%"})
-      .append($prev)
-      .append($area)
-      .append($next));
+  //var renderID = getRandomID("epub");
+  //initViewerUI(containerElementID, renderID);
+
+  //var options = {
+  //  bookPath : fileDirectory,
+  //  restore: true
+  //};
+
 }

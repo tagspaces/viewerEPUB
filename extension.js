@@ -77,24 +77,24 @@ define(function(require, exports, module) {
 
     function setContent(content, containerElementID) {
         console.log("SET CONTENT : " + content);
-        var contentEpub = new Uint8Array(content);
-        console.log("EPUB FILE: ");
-        var renderID = getRandomID("epub");
-        initViewerUI(containerElementID, renderID);
 
-        console.log("EPUB FILE CONTENT: " + epubContent);
         var fileDirectory = TSCORE.TagUtils.extractContainingDirectoryPath(currentFilePath);
         if (isWeb) {
             fileDirectory = TSCORE.TagUtils.extractContainingDirectoryPath(location.href) + "/" + fileDirectory;
         }
+        //var renderID = getRandomID("epub");
+        //initViewerUI(containerElementID, renderID);
+        //content = reader.loadBook(fileDirectory, renderID);
 
-        var epubContent = reader.loadBook(fileDirectory, renderID);
         var contentWindow = document.getElementById("iframeViewer").contentWindow;
         if (typeof contentWindow.setContent === "function") {
-            contentWindow.setContent(epubContent, fileDirectory);
+            contentWindow.setContent(content, fileDirectory);
         } else {
-            TSCORE.showAlertDialog("Can't load epub content");
-            throw new TypeError("Can't load epub content");
+            window.setTimeout(function () {
+                contentWindow.setContent(content, fileDirectory);
+            }, 500);
+            //TSCORE.showAlertDialog("Can't load epub content");
+            //throw new TypeError("Can't load epub content");
             //// TODO optimize setTimeout
         }
         console.log("setContent not supported on this extension");
