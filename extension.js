@@ -6,118 +6,91 @@
  */
 
 define(function(require, exports, module) {
-    "use strict";
+  "use strict";
 
-    var extensionID = "viewerEPUB"; // ID should be equal to the directory name where the ext. is located
-    var extensionSupportedFileTypes = ["epub"];
+  var extensionID = "viewerEPUB"; // ID should be equal to the directory name where the ext. is located
+  var extensionSupportedFileTypes = ["epub"];
 
-    console.log("Loading " + extensionID);
+  console.log("Loading " + extensionID);
 
-    var TSCORE = require("tscore");
-    var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + extensionID;
-    var reader = require("ext/viewerEPUB/epubreader");
-    require([
-        'css!' + extensionDirectory + '/extension.css',
-    ], function() {});
-    var containerElID;
-    var currentFilePath;
-    var $containerElement;
+  var TSCORE = require("tscore");
+  var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + extensionID;
+  var reader = require("ext/viewerEPUB/epubreader");
+  require([
+    'css!' + extensionDirectory + '/extension.css',
+  ], function() {
+  });
+  var containerElID;
+  var currentFilePath;
+  var $containerElement;
 
-    function initViewerUI(containerElementID, renderID) {
-        var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(reader.prevPage);
+  function init(filePath, containerElementID) {
+    console.log("Initalization EPUB Viewer...");
+    containerElID = containerElementID;
+    $containerElement = $('#' + containerElID);
 
-        var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(reader.nextPage);
+    currentFilePath = filePath;
+    $containerElement.empty();
+    $containerElement.css("background-color", "white");
+    $containerElement.append($('<iframe>', {
+      sandbox: "allow-same-origin allow-scripts allow-modals",
+      id: "iframeViewer",
+      "nwdisable": "",
+      //"nwfaketop": "",
+      "src": extensionDirectory + "/index.html?&locale=" + TSCORE.currentLanguage,
+    }));
+    TSCORE.IO.getFileContentPromise(filePath).then(function(content) {
+      exports.setContent(content);
+    }, function(error) {
+      TSCORE.hideLoadingAnimation();
+      TSCORE.showAlertDialog("Loading " + filePath + " failed.");
+      console.error("Loading file " + filePath + " failed " + error);
+    });
+  }
 
-        var $area = $("<div>")
-            .attr('id', renderID)
-            .addClass("flexMaxWidth")
-            .addClass("flexLayoutVertical")
-            .css({"margin": "5% auto"});
+  function viewerMode() {
 
-        var $main = $("<div>")
-            .attr('id', 'viewerEPUBMain')
-            .addClass("flexLayout")
-            .css({"width": "100%"})
-            .append($prev)
-            .append($area)
-            .append($next);
+    console.log("viewerMode not supported on this extension");
+  }
 
-        $('#' + containerElementID).append($main);
+
+  function setContent(content) {
+    var ePubContent = new ePub(content);
+
+    var fileDirectory = TSCORE.TagUtils.extractContainingDirectoryPath(currentFilePath);
+    if (isWeb) {
+      fileDirectory = TSCORE.TagUtils.extractContainingDirectoryPath(location.href) + "/" + fileDirectory;
     }
 
-    function init(filePath, containerElementID) {
-        console.log("Initalization EPUB Viewer...");
-        containerElID = containerElementID;
-        $containerElement = $('#' + containerElID);
-
-        currentFilePath = filePath;
-        $containerElement.empty();
-        $containerElement.css("background-color", "white");
-        $containerElement.append($('<iframe>', {
-            sandbox: "allow-same-origin allow-scripts allow-modals",
-            id: "iframeViewer",
-            "nwdisable": "",
-            //"nwfaketop": "",
-            "src": extensionDirectory + "/index.html?&locale=" + TSCORE.currentLanguage,
-        }));
-        TSCORE.IO.getFileContentPromise(filePath).then(function (content) {
-            exports.setContent(content);
-        }, function (error) {
-            TSCORE.hideLoadingAnimation();
-            TSCORE.showAlertDialog("Loading " + filePath + " failed.");
-            console.error("Loading file " + filePath + " failed " + error);
-        });
+    var contentWindow = document.getElementById("iframeViewer").contentWindow;
+    if (typeof contentWindow.setContent === "function") {
+      contentWindow.setContent(ePubContent, fileDirectory);
+    } else {
+      window.setTimeout(function() {
+        contentWindow.setContent(ePubContent, fileDirectory);
+      }, 500);
     }
+    console.log("setContent not supported on this extension");
+  }
 
-    function viewerMode() {
+  function getContent() {
 
-        console.log("viewerMode not supported on this extension");
+    console.log("getContent not supported on this extension");
+  }
+
+  function getRandomID(prefix, length) {
+    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+    var string_length = length || 8;
+    var randomstring = '';
+    for (var i = 0; i < string_length; i++) {
+      var rnum = Math.floor(Math.random() * chars.length);
+      randomstring += chars.substring(rnum, rnum + 1);
     }
+    return prefix ? prefix + "-" + randomstring : randomstring;
+  }
 
-
-    function setContent(content, containerElementID) {
-        console.log("SET CONTENT : " + content);
-
-        var fileDirectory = TSCORE.TagUtils.extractContainingDirectoryPath(currentFilePath);
-        if (isWeb) {
-            fileDirectory = TSCORE.TagUtils.extractContainingDirectoryPath(location.href) + "/" + fileDirectory;
-        }
-        //var renderID = getRandomID("epub");
-        //initViewerUI(containerElementID, renderID);
-        //content = reader.loadBook(fileDirectory, renderID);
-
-        var contentWindow = document.getElementById("iframeViewer").contentWindow;
-        if (typeof contentWindow.setContent === "function") {
-            contentWindow.setContent(content, fileDirectory);
-        } else {
-            window.setTimeout(function () {
-                contentWindow.setContent(content, fileDirectory);
-            }, 500);
-            //TSCORE.showAlertDialog("Can't load epub content");
-            //throw new TypeError("Can't load epub content");
-            //// TODO optimize setTimeout
-        }
-        console.log("setContent not supported on this extension");
-    }
-
-    function getContent() {
-
-        console.log("getContent not supported on this extension");
-    }
-
-    function getRandomID(prefix, length) {
-        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-        var string_length = length || 8;
-        var randomstring = '';
-        for (var i = 0; i < string_length; i++) {
-            var rnum = Math.floor(Math.random() * chars.length);
-            randomstring += chars.substring(rnum, rnum + 1);
-        }
-        return prefix ? prefix + "-" + randomstring : randomstring;
-    }
-
-    exports.init = init;
-    exports.getContent = getContent;
-    exports.setContent = setContent;
-    exports.viewerMode = viewerMode;
+  exports.init = init;
+  exports.getContent = getContent;
+  exports.setContent = setContent;
+  exports.viewerMode = viewerMode;
 });

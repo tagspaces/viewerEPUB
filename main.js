@@ -13,7 +13,7 @@ $(document).ready(function() {
   function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-      results = regex.exec(location.search);
+            results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
@@ -25,37 +25,35 @@ $(document).ready(function() {
   isCordova = parent.isCordova;
   isWin = parent.isWin;
   isWeb = parent.isWeb;
-  
+
   $(document).on('drop dragend dragenter dragover', function(event) {
     event.preventDefault();
   });
-  
+
   $('#aboutExtensionModal').on('show.bs.modal', function() {
     $.ajax({
       url: 'README.md',
       type: 'GET'
-    })
-    .done(function(mdData) {
+    }).done(function(mdData) {
       //console.log("DATA: " + mdData);
       if (marked) {
         var modalBody = $("#aboutExtensionModal .modal-body");
-        modalBody.html(marked(mdData, { sanitize: true }));
+        modalBody.html(marked(mdData, {sanitize: true}));
         handleLinks(modalBody);
       } else {
         console.log("markdown to html transformer not found");
-      }        
-    })
-    .fail(function(data) {
+      }
+    }).fail(function(data) {
       console.warn("Loading file failed " + data);
     });
-  });  
+  });
 
   function handleLinks($element) {
     $element.find("a[href]").each(function() {
       var currentSrc = $(this).attr("href");
       $(this).bind('click', function(e) {
         e.preventDefault();
-        var msg = {command: "openLinkExternally", link : currentSrc};
+        var msg = {command: "openLinkExternally", link: currentSrc};
         window.parent.postMessage(JSON.stringify(msg), "*");
       });
     });
@@ -115,11 +113,13 @@ $(document).ready(function() {
     saveExtSettings();
   });
 
-  $("#printButton").on("click", function() {
-    $(".dropdown-menu").dropdown('toggle');
-    window.print();
+  $("#aboutButton").on("click", function(e) {
+    $("#aboutExtensionModal").modal({show: true});
   });
 
+  $("#printButton").on("click", function(e) {
+    window.print();
+  });
   if (isCordova) {
     $("#printButton").hide();
   }
@@ -137,7 +137,7 @@ $(document).ready(function() {
   function saveExtSettings() {
     var settings = {
       "styleIndex": currentStyleIndex,
-      "zoomState":  currentZoomState
+      "zoomState": currentZoomState
     };
     localStorage.setItem('viewerEPUBSettings', JSON.stringify(settings));
   }
@@ -145,80 +145,46 @@ $(document).ready(function() {
   function loadExtSettings() {
     extSettings = JSON.parse(localStorage.getItem("viewerEPUBSettings"));
   }
-
 });
 
-//function initViewerUI(containerElementID, renderID) {
-//  var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(reader.prevPage);
-//
-//  var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(reader.nextPage);
-//
-//  var $area = $("<div>")
-//      .attr('id', renderID)
-//      .addClass("flexMaxWidth")
-//      .addClass("flexLayoutVertical")
-//      .css({"margin": "5% auto"});
-//
-//  var $main = $("<div>")
-//      .attr('id', 'viewerEPUBMain')
-//      .addClass("flexLayout")
-//      .css({"width": "100%"})
-//      .append($prev)
-//      .append($area)
-//      .append($next);
-//
-//  $('#' + containerElementID).append($main);
-//}
 
-//function getRandomID(prefix, length) {
-//  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-//  var string_length = length || 8;
-//  var randomstring = '';
-//  for (var i = 0; i < string_length; i++) {
-//    var rnum = Math.floor(Math.random() * chars.length);
-//    randomstring += chars.substring(rnum, rnum + 1);
-//  }
-//  return prefix ? prefix + "-" + randomstring : randomstring;
-//}
-function init(filePath, elementID) {
-  //console.log("Initalization EPUB Viewer...");
-
-  //var renderID = getRandomID("epub");
-  //initViewerUI(elementID, renderID);
-  //if (!isCordova) {
-  //  filePath = "file://" + filePath;
-  //}
-  //reader.loadBook(filePath, renderID);
+function getRandomID(prefix, length) {
+  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  var string_length = length || 8;
+  var randomstring = '';
+  for (var i = 0; i < string_length; i++) {
+    var rnum = Math.floor(Math.random() * chars.length);
+    randomstring += chars.substring(rnum, rnum + 1);
+  }
+  return prefix ? prefix + "-" + randomstring : randomstring;
 }
 
-var book;
-function setContent(content, fileDirectory , containerElementID) {
-  console.log("MAIN CONTENT:");
-  console.debug(content);
-  console.log("MAIN END");
+function setContent(content, filePath) {
 
-  //try {
-  //  content = JSON.parse(content);
-  //} catch (e){
-  //  console.log("Error parsing JSON document. " + e);
-  //  return false;
-  //}
-  //console.debug(content);
+  if (filePath.indexOf("file://") === 0) {
+    filePath = filePath.substring(("file://").length, filePath.length);
+  }
+
+  var Book = ePub(content, filePath, {restore: true});
+  var renderID = getRandomID("epub");
+  console.debug(Book);
 
   var $htmlContent = $('#htmlContent');
   $htmlContent.append(content);
 
-  if (fileDirectory.indexOf("file://") === 0) {
-    fileDirectory = fileDirectory.substring(("file://").length, fileDirectory.length);
-  }
+  Book.getMetadata().then(function(meta) {
+    document.title = meta.bookTitle + " – " + meta.creator;
+  });
 
+  var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(Book.prevPage);
 
-  //var renderID = getRandomID("epub");
-  //initViewerUI(containerElementID, renderID);
+  var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(Book.nextPage);
 
-  //var options = {
-  //  bookPath : fileDirectory,
-  //  restore: true
-  //};
+  var $area = $("<div>").attr('id', renderID).addClass("flexMaxWidth").addClass("flexLayoutVertical").css({"margin": "5% auto"});
 
+  var $main = $("<div>").attr('id', 'viewerEPUBMain').addClass("flexLayout").css({"width": "100%"}).append($prev).append($area).append($next);
+
+  $htmlContent.append($main);
+
+  Book.renderTo('area');
 }

@@ -8,8 +8,8 @@
   <script type="text/javascript" src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="../../libs/i18next/i18next.min.js"></script>
   <script type="text/javascript" src="../../libs/marked/marked.min.js"></script>
-  <script type="text/javascript" src="../../ext/viewerEPUB/epubreader.js"></script>
-  <script type="text/javascript" src="epubjs/epub.js"></script>
+  <script type="text/javascript" src="libs/epub.js/build/epub.min.js"></script>
+  <!--<script type="text/javascript" src="epubjs/epub.js.js"></script>-->
   <script type="text/javascript" src="main.js"></script>
   <link rel="stylesheet" href="../../assets/tagspaces.css"/>
   <link rel="stylesheet" href="extension.css"/>
@@ -26,10 +26,10 @@
     <li class="dropdown-header">
       <button class="close">&times;</button>&nbsp;
     </li>
-    <li class="divider"></li>
-    <li><a id="changeStyleButton">
-      <i class="fa fa-adjust fa-lg fa-fw"></i>&nbsp;<span data-i18n="ns.viewerEPUB:changeTheme"></span>
-    </a></li>
+    <!--<li class="divider"></li>-->
+    <!--<li><a id="changeStyleButton">-->
+      <!--<i class="fa fa-adjust fa-lg fa-fw"></i>&nbsp;<span data-i18n="ns.viewerEPUB:changeTheme"></span>-->
+    <!--</a></li>-->
     <li class="divider"></li>
     <li><a id="zoomOutButton">
       <i class="fa fa-search-minus fa-lg fa-fw"></i>&nbsp;<span data-i18n="ns.viewerEPUB:zoomOut"></span>
@@ -44,7 +44,7 @@
     <li><a id="printButton">
       <i class="fa fa-print fa-lg fa-fw"></i>&nbsp;<span data-i18n="ns.viewerEPUB:print"></span>
     </a></li>
-    <li><a id="aboutButton" data-toggle="modal" data-target="#aboutExtensionModal">
+    <li><a id="aboutButton">
       <i class="fa fa-comment fa-lg fa-fw"></i>&nbsp;<span data-i18n="ns.viewerEPUB:about"></span>
     </a></li>
   </ul>
