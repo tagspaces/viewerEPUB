@@ -1615,7 +1615,7 @@ EPUBJS.Render = {};
 	var ePub = root.ePub = function() {
 		var bookPath, options;
 
-		//-- var book = ePub("path/to/book.epub", { restore: true })
+		//-- var book = ePub("path/to/book.epub.js", { restore: true })
 		if(typeof(arguments[0]) != 'undefined' &&
 			(typeof arguments[0] === 'string' || arguments[0] instanceof ArrayBuffer)) {
 
@@ -1631,12 +1631,12 @@ EPUBJS.Render = {};
 		}
 
 		/*
-		*   var book = ePub({ bookPath: "path/to/book.epub", restore: true });
+		*   var book = ePub({ bookPath: "path/to/book.epub.js", restore: true });
 		*
 		*   - OR -
 		*
 		*   var book = ePub({ restore: true });
-		*   book.open("path/to/book.epub");
+		*   book.open("path/to/book.epub.js");
 		*/
 
 		if( arguments[0] && typeof arguments[0] === 'object' && !(arguments[0] instanceof ArrayBuffer)) {
@@ -1824,7 +1824,7 @@ EPUBJS.Book.prototype.open = function(bookPath, forceReload){
 
 	}else{
 
-		//-- Get package information from epub opf
+		//-- Get package information from epub.js opf
 		epubpackage.then(function(packageXml) {
 			book.unpack(packageXml);
 			opened.resolve();
@@ -2288,7 +2288,7 @@ EPUBJS.Book.prototype.unarchive = function(bookPath){
 	return this.zip.open(bookPath);
 };
 
-//-- Checks if url has a .epub or .zip extension, or is ArrayBuffer (of zip/epub)
+//-- Checks if url has a .epub.js or .zip extension, or is ArrayBuffer (of zip/epub.js)
 EPUBJS.Book.prototype.isContained = function(bookUrl){
 	if (bookUrl instanceof ArrayBuffer) {
 		return true;
@@ -5536,7 +5536,7 @@ EPUBJS.Parser.prototype.spine = function(spineXml, manifest){
 
 EPUBJS.Parser.prototype.querySelectorByType = function(html, element, type){
 	var query = html.querySelector(element+'[*|type="'+type+'"]');
-	// Handle IE not supporting namespaced epub:type in querySelector
+	// Handle IE not supporting namespaced epub.js:type in querySelector
 	if(query === null || query.length === 0) {
 		query = html.querySelectorAll(element);
 		for (var i = 0; i < query.length; i++) {
@@ -7721,7 +7721,7 @@ EPUBJS.Unarchiver.prototype.getUrl = function(url, mime){
 
 	if(!entry) {
 		deferred.reject({
-			message : "File not found in the epub: " + url,
+			message : "File not found in the epub.js: " + url,
 			stack : new Error().stack
 		});
 		return deferred.promise;
@@ -7750,7 +7750,7 @@ EPUBJS.Unarchiver.prototype.getText = function(url, encoding){
 
 	if(!entry) {
 		deferred.reject({
-			message : "File not found in the epub: " + url,
+			message : "File not found in the epub.js: " + url,
 			stack : new Error().stack
 		});
 		return deferred.promise;
