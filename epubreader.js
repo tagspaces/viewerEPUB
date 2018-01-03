@@ -2,10 +2,11 @@
  * @overview EPUB reader module
  * @copyright Copyright (c) 2015 Borislav Sapundzhiev <BSapundzhiev@gmail.com>
  * @license   Licensed under MIT license
- *            See https://opensource.org/licenses/MIT 
+ *            See https://opensource.org/licenses/MIT
  */
+var loadContentExternally = true;
 
-define(function(require, exports, module) { 
+define(function(require, exports, module) {
   "use strict";
 
   var ePub = require("ext/viewerEPUB/epubjs/epub");
