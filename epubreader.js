@@ -4,17 +4,16 @@
  * @license   Licensed under MIT license
  *            See https://opensource.org/licenses/MIT
  */
-var loadContentExternally = true;
 
 define(function(require, exports, module) {
-  "use strict";
+  'use strict';
 
-  var ePub = require("ext/viewerEPUB/epubjs/epub");
+  var ePub = require('./epubjs/epub');
   var book, rendered;
   var bookFileName;
   var defaultBookStyle = {
-    "font-size": "1.2em",
-    "text-align": "justify"
+    'font-size': '1.2em',
+    'text-align': 'justify'
   };
 
   var options = {
@@ -40,7 +39,7 @@ define(function(require, exports, module) {
     });
 
     book.on('book:pageChanged', function(location) {
-      console.log("pageChanged", location);
+      console.log('pageChanged', location);
     });
 
     book.on('book:ready', function() {
