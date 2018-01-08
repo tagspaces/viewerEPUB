@@ -131,7 +131,7 @@ function init() {
       text: 'Open Natively'
     }).on("click", function() {
       var msg = {command: 'openFileNatively', link: filePath};
-      window.parent.postMessage(JSON.stringify(msg), '*');
+      sendMessageToHost(msg);
     }));
   }
 
