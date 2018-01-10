@@ -4,7 +4,6 @@
 'use strict';
 
 var $epubContent;
-var isWeb = (document.URL.startsWith('http') && !document.URL.startsWith('http://localhost:1212/'));
 var Book = ePub('./epubjs/epub.js');
 //var reader = require('./epubreader');
 
