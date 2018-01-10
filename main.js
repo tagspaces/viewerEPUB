@@ -9,15 +9,9 @@ var Book = ePub('./epubjs/epub.js');
 
 $(document).ready(init);
 function init() {
-  function getParameterByName(name) {
-    name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
-      results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-  }
-
   var locale = getParameterByName('locale');
   var filePath = getParameterByName("file");
+  initI18N(locale, 'ns.viewerEPUB.json');
 
   var extSettings;
   loadExtSettings();
@@ -81,17 +75,6 @@ function init() {
     $epubContent.removeClass();
     $epubContent.addClass('markdown ' + styles[currentStyleIndex] + ' ' + zoomSteps[currentZoomState]);
     saveExtSettings();
-  });
-
-  // Init internationalization
-  i18next.init({
-    ns: {namespaces: ['ns.viewerEPUB']},
-    debug: true,
-    lng: locale,
-    fallbackLng: 'en_US'
-  }, function() {
-    jqueryI18next.init(i18next, $);
-    $('[data-i18n]').localize();
   });
 
   function saveExtSettings() {
