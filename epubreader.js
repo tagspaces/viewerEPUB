@@ -1,6 +1,6 @@
 /*
  * @overview EPUB reader module
- * @copyright Copyright (c) 2015 Borislav Sapundzhiev <BSapundzhiev@gmail.com>
+ * @copyright Copyright (c)  2013-present Borislav Sapundzhiev <BSapundzhiev@gmail.com>
  * @license   Licensed under MIT license
  *            See https://opensource.org/licenses/MIT
  */

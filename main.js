@@ -3,29 +3,33 @@
 /* globals JSZip */
 'use strict';
 
-var $epubContent;
-var Book = ePub('./epubjs/epub.js');
-//var reader = require('./epubreader');
+let $epubContent;
+const Book = ePub('./epubjs/epub.js');
 
-$(document).ready(init);
+$(document).ready(() => {
+  console.log('Initalization EPUB Viewer...');
+  // console.log(Book);
+  init();
+});
+
 function init() {
-  var locale = getParameterByName('locale');
-  var filePath = getParameterByName("file");
+  const locale = getParameterByName('locale');
+  const filePath = getParameterByName('file');
   initI18N(locale, 'ns.viewerEPUB.json');
 
-  var extSettings;
+  let extSettings;
   loadExtSettings();
 
   $epubContent = $('#epubContent');
 
-  var styles = ['', 'solarized-dark', 'github', 'metro-vibes', 'clearness', 'clearness-dark'];
-  var currentStyleIndex = 0;
+  const styles = ['', 'solarized-dark', 'github', 'metro-vibes', 'clearness', 'clearness-dark'];
+  let currentStyleIndex = 0;
   if (extSettings && extSettings.styleIndex) {
     currentStyleIndex = extSettings.styleIndex;
   }
 
-  var zoomSteps = ['zoomSmallest', 'zoomSmaller', 'zoomSmall', 'zoomDefault', 'zoomLarge', 'zoomLarger', 'zoomLargest'];
-  var currentZoomState = 3;
+  const zoomSteps = ['zoomSmallest', 'zoomSmaller', 'zoomSmall', 'zoomDefault', 'zoomLarge', 'zoomLarger', 'zoomLargest'];
+  let currentZoomState = 3;
   if (extSettings && extSettings.zoomState) {
     currentZoomState = extSettings.zoomState;
   }
@@ -33,7 +37,7 @@ function init() {
   $epubContent.removeClass();
   $epubContent.addClass('markdown ' + styles[currentStyleIndex] + ' ' + zoomSteps[currentZoomState]);
 
-  $('#changeStyleButton').bind('click', function() {
+  $('#changeStyleButton').bind('click', () => {
     currentStyleIndex = currentStyleIndex + 1;
     if (currentStyleIndex >= styles.length) {
       currentStyleIndex = 0;
@@ -43,14 +47,14 @@ function init() {
     saveExtSettings();
   });
 
-  $('#resetStyleButton').bind('click', function() {
+  $('#resetStyleButton').bind('click', () => {
     currentStyleIndex = 0;
     $epubContent.removeClass();
     $epubContent.addClass('markdown ' + styles[currentStyleIndex] + ' ' + zoomSteps[currentZoomState]);
     saveExtSettings();
   });
 
-  $('#zoomInButton').bind('click', function() {
+  $('#zoomInButton').bind('click', () => {
     currentZoomState++;
     if (currentZoomState >= zoomSteps.length) {
       currentZoomState = 6;
@@ -60,7 +64,7 @@ function init() {
     saveExtSettings();
   });
 
-  $('#zoomOutButton').bind('click', function() {
+  $('#zoomOutButton').bind('click', () => {
     currentZoomState--;
     if (currentZoomState < 0) {
       currentZoomState = 0;
@@ -70,7 +74,7 @@ function init() {
     saveExtSettings();
   });
 
-  $('#zoomResetButton').bind('click', function() {
+  $('#zoomResetButton').bind('click', () => {
     currentZoomState = 3;
     $epubContent.removeClass();
     $epubContent.addClass('markdown ' + styles[currentStyleIndex] + ' ' + zoomSteps[currentZoomState]);
@@ -78,7 +82,7 @@ function init() {
   });
 
   function saveExtSettings() {
-    var settings = {
+    const settings = {
       'styleIndex': currentStyleIndex,
       'zoomState':  currentZoomState
     };
@@ -90,18 +94,18 @@ function init() {
   }
 
   // removing the script tags from the content
-  // var cleanedContent = content.toString().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+  // const cleanedContent = content.toString().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
 
   $epubContent.empty().append($('<div>', {
-    style: "background-color: darkgray; width: 100%;",
-    class: "flexLayoutVertical",
-    id: "mainLayout"
+    style: 'background-color: darkgray; width: 100%;',
+    class: 'flexLayoutVertical',
+    id: 'mainLayout'
   })
   .append('<span style="font-size: 14px; color: white;">&nbsp;Preview of the document begin: </span>')
   .append($('<textarea>', {
-      readonly: "true",
-      style: "overflow: auto; height: 100%; width: 100%; font-size: 13px; margin: 0px; background-color: white; border-width: 0px;",
-      class: "flexMaxHeight"
+      readonly: 'true',
+      style: 'overflow: auto; height: 100%; width: 100%; font-size: 13px; margin: 0px; background-color: white; border-width: 0px;',
+      class: 'flexMaxHeight'
     })
   // .append(cleanedContent)
   ));
@@ -111,23 +115,22 @@ function init() {
       class: 'btn btn-primary',
       style: 'margin: 5px;',
       text: 'Open Natively'
-    }).on("click", function() {
-      var msg = {command: 'openFileNatively', link: filePath};
+    }).on('click', () => {
+      const msg = {command: 'openFileNatively', link: filePath};
       sendMessageToHost(msg);
     }));
   }
 
-  console.log("Initalization EPUB Viewer...");
-  var renderID = getRandomID("epub");
+  const renderID = getRandomID('epub');
   initEpub(filePath, renderID);
 }
 
 function getRandomID(prefix, length) {
-  var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-  var string_length = length || 8;
-  var randomstring = '';
-  for (var i = 0; i < string_length; i++) {
-    var rnum = Math.floor(Math.random() * chars.length);
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+  const string_length = length || 8;
+  let randomstring = '';
+  for (let i = 0; i < string_length; i++) {
+    const rnum = Math.floor(Math.random() * chars.length);
     randomstring += chars.substring(rnum, rnum + 1);
   }
   return prefix ? prefix + '-' + randomstring : randomstring;
@@ -136,31 +139,99 @@ function getRandomID(prefix, length) {
 function initEpub(filePath, elementID) {
   console.log('Initalization EPUB Viewer...');
 
-  var renderID = getRandomID('epub');
+  const renderID = getRandomID('epub');
   initViewerUI(elementID, renderID);
   if (isElectron || isChromeExt) {
-    filePath = 'file://' + filePath;
+    // filePath = 'file://' + filePath;
   }
-  reader.loadBook(filePath, renderID);
+  loadBook(filePath, renderID);
 }
 
 function initViewerUI(elementID, renderID) {
-  var $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(reader.prevPage);
-  var $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(reader.nextPage);
+  const $prev = $("<div class='viewerEPUBNaviButton'>‹</div>").click(prevPage);
+  const $next = $("<div class='viewerEPUBNaviButton'>›</div>").click(nextPage);
 
-  var $area = $("<div>")
+  const $area = $("<div>")
   .attr('id', renderID)
   .addClass('flexMaxWidth')
   .addClass('flexLayoutVertical')
   .css({'margin': '5% auto'});
 
-  var $main = $("<div>")
+  const $main = $("<div>")
   .attr('id', 'viewerEPUBMain')
-  .addClass("flexLayout")
-  .css({"width": "100%"})
+  .addClass('flexLayout')
+  .css({'width': '100%'})
   .append($prev)
   .append($area)
   .append($next);
 
   $('#' + elementID).append($main);
+}
+
+let book,
+  rendered;
+let bookFileName;
+const defaultBookStyle = {
+  'font-size': '1.2em',
+  'text-align': 'justify'
+};
+
+const options = {
+  bookPath: null,
+  version: 1, // Changing will cause stored Book information to be reloaded
+  restore: true, // Skips parsing epub contents, loading from localstorage instead
+  storage: false, // true (auto) or false (none) | override: 'ram', 'websqldatabase', 'indexeddb', 'filesystem'
+  spreads: false, // Displays two columns
+  fixedLayout: true, // -- Will turn off pagination
+  styles: {}, // Styles to be applied to epub
+  width: false,
+  height: false,
+};
+
+function loadBook(filePath, renderID) {
+  bookFileName = filePath;
+  book = ePub(filePath, options);
+  setStyle(defaultBookStyle);
+  rendered = book.renderTo(renderID);
+
+  book.on('renderer:locationChanged', (locationCfi) => {
+    storeLastPage(locationCfi);
+  });
+
+  book.on('book:pageChanged', (location) => {
+    console.log('pageChanged', location);
+  });
+
+  book.on('book:ready', () => {
+    if (options.restore) {
+      restoreLastPage();
+    }
+  });
+}
+
+function restoreLastPage() {
+  const locationCfi = storeLastPage();
+  book.displayChapter(locationCfi);
+}
+
+function storeLastPage(storeData) {
+  if (storeData) {
+    localStorage.setItem(bookFileName, storeData);
+  } else {
+    return localStorage.getItem(bookFileName);
+  }
+}
+
+function prevPage() {
+  book.prevPage();
+}
+
+function nextPage() {
+  book.nextPage();
+}
+
+function setStyle(obj) {
+  for (const key in obj) {
+    book.setStyle(key, obj[key]);
+  }
 }
