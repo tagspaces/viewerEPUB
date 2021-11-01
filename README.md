@@ -1,3 +1,5 @@
+This repository is archived. Please use https://github.com/tagspaces/tagspaces-extensions instead.
+
 # EPUB Viewer for TagSpaces
 
 A TagSpaces extension allowing you to open ebooks in EPUB format.
